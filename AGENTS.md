@@ -90,6 +90,30 @@ Do not introduce `docx` or `pptx` support unless explicitly requested. Keep impl
 - Prefer strong typography, restrained motion, and clean evidence-first layouts.
 - The default renderer is built in. Future explicit skill-based renderers should consume `deck.md` rather than raw source material.
 
+## Recommended Skills
+
+Use the globally installed skills on this machine as the default capability map for this repository.
+
+### Preprocessing And Archival
+
+- `pdf`: default skill for PDF extraction, OCR, text cleanup, and PDF-to-structured-content preparation.
+- `xlsx`: use when source material includes spreadsheet tables or numeric appendices that should be folded into normalized content.
+- `docx`: globally available, but out of scope for repository v1. Only use if the repository scope is explicitly expanded.
+- `pptx`: globally available, but out of scope for repository v1. Only use if the repository scope is explicitly expanded.
+
+### Output And Rendering
+
+- `frontend-design`: default skill for turning `deck.md` into polished HTML presentation pages.
+- `web-artifacts-builder`: use when the output needs a more elaborate multi-component web artifact rather than a straightforward presentation page.
+- `imagegen`: supporting skill for deck-specific visual assets such as covers, illustrations, textures, and backgrounds.
+- `theme-factory`: use when the main need is to create or refine reusable presentation themes rather than changing deck content.
+- `brand-guidelines`: use when output must conform to a defined brand system or visual identity.
+
+### Naming Note
+
+- The current machine does not have a globally installed skill named `frontend-dev`.
+- If a session exposes `frontend-dev` as a temporary or aliased skill, treat `frontend-design` as the global installed equivalent for this repository.
+
 ## Design Direction
 
 The project is for reports, not startup landing pages. Generated decks should feel:
