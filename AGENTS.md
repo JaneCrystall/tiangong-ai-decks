@@ -1,6 +1,6 @@
 # AGENTS
 
-This repository is a personal system for building reviewable Markdown decks from accumulated source material. The project is not a generic slide editor. It is a source-driven report engine.
+This repository is a reusable system for building reviewable Markdown decks from accumulated source material. The project is not a generic slide editor. It is a source-driven report engine.
 
 ## Mission
 
@@ -45,6 +45,7 @@ Do not introduce `docx` or `pptx` support unless explicitly requested. Keep impl
 - `content/normalized/<source-id>.json`: normalized document used by the builder.
 - `content/library/`: future derived artifacts such as facts, quotes, tables, code insights, and visuals.
 - `content/indexes/`: rebuildable search or retrieval indexes.
+- User data under `content/` should remain local by default. Keep only scaffolding files such as `.gitkeep` and documentation in Git.
 
 ### `decks/<deck-id>/`
 
@@ -54,6 +55,7 @@ Do not introduce `docx` or `pptx` support unless explicitly requested. Keep impl
 - `deck.md`: generated slide draft and canonical review artifact.
 - `sources.lock.json`: source lock used to trace the deck back to archived materials.
 - `assets/`: deck-specific local assets when needed later.
+- Deck workspaces are user data and should remain gitignored by default, except for repository scaffolding such as `decks/README.md` and `decks/.gitkeep`.
 
 ## Authoring Rules
 

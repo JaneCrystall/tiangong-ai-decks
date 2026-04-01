@@ -8,6 +8,7 @@
 - `normalized/`: machine-readable documents generated from imported sources.
 - `library/`: future derived facts, quotes, tables, visuals, and code insights.
 - `indexes/`: search and retrieval indexes. Safe to rebuild.
+- User files under these working directories are intentionally gitignored by default. Only scaffolding files such as `.gitkeep` and this README should be versioned.
 
 Archive key format:
 

@@ -1,6 +1,6 @@
 # Presentation
 
-`presentation` is a personal presentation workspace. It accumulates raw source material, normalizes it into a stable content model, and builds reviewable `deck.md` files for reports.
+`presentation` is a reusable presentation workspace. It accumulates raw source material, normalizes it into a stable content model, and builds reviewable `deck.md` files for reports.
 
 V1 scope is intentionally narrow:
 
@@ -58,6 +58,7 @@ AGENTS.md                 Project contract for future AI work
 
 ## Notes
 
+- User data under `content/` and `decks/` is intentionally ignored by Git by default. The repository tracks only scaffolding files such as `README.md` and `.gitkeep`.
 - `docx` and `pptx` are out of scope for v1.
 - `theme` in `brief.md` is only a freeform render hint for external skills. The repository does not ship a built-in HTML renderer or internal theme engine.
 - GitHub import currently snapshots repository metadata and README for public repositories.
