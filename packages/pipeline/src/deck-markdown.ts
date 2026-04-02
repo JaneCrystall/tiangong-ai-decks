@@ -87,6 +87,29 @@ export function renderDeckMarkdown(deck: Deck): string {
   return matter.stringify(markdown, data);
 }
 
+export function renderPublicDeckMarkdown(deck: Deck): string {
+  const sections: string[] = [`# ${deck.title}`, ""];
+  if (deck.subtitle) {
+    sections.push(deck.subtitle, "");
+  }
+
+  for (const slide of deck.slides) {
+    sections.push(`## ${slide.title}`);
+    if (slide.kicker?.trim() && slide.kicker.trim() !== deck.audience.trim()) {
+      sections.push(`_${slide.kicker.trim()}_`, "");
+    }
+
+    const body = slide.body?.trim()
+      ? slide.body.trim()
+      : (slide.bullets ?? []).map((bullet) => `- ${bullet}`).join("\n");
+    if (body) {
+      sections.push(body, "");
+    }
+  }
+
+  return sections.join("\n").trimEnd() + "\n";
+}
+
 export function parseDeckMarkdown(raw: string): Deck {
   const parsed = matter(raw);
   const data = parsed.data as DeckFrontmatter;

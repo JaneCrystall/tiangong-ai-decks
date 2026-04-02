@@ -142,6 +142,24 @@ export interface Deck {
   slides: DeckSlide[];
 }
 
+export interface DeckRenderHandoff {
+  schemaVersion: number;
+  deckId: string;
+  title: string;
+  displayArtifact: string;
+  reviewArtifact: string;
+  briefPath: string;
+  sourceLockPath: string;
+  themeHint?: string;
+  rules: {
+    publicOnly: boolean;
+    includeSpeakerNotes: boolean;
+    includeControlDirectives: boolean;
+    includeSourceIdsInOutput: boolean;
+    fallbackToReviewArtifact: "never-by-default";
+  };
+}
+
 export interface ProjectPaths {
   root: string;
   content: string;

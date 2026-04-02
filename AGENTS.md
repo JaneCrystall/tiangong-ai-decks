@@ -61,6 +61,8 @@ Source-format coverage should expand through skills and contract-preserving work
 - `outline.md`: human-editable outline. Each `##` heading becomes a content slide section.
 - `outline.generated.md`: last machine-generated outline snapshot.
 - `deck.md`: generated slide draft and canonical review artifact.
+- `deck.public.md`: renderer-facing Markdown derived from `deck.md` with review-only content removed.
+- `render.handoff.json`: renderer-facing contract that tells external HTML renderers to consume `deck.public.md` by default.
 - `sources.lock.json`: source lock used to trace the deck back to archived materials.
 - `assets/`: deck-specific local assets when needed later.
 - Deck workspaces are user data and should remain gitignored by default, except for repository scaffolding such as `decks/README.md` and `decks/.gitkeep`.
@@ -101,6 +103,8 @@ Source-format coverage should expand through skills and contract-preserving work
 - `brief.md` defines the why, who, duration, freeform render hint, and intended sources.
 - `outline.md` defines the story. Edit this before editing any rendering prompt or output.
 - `deck.md` is the review layer between outline generation and HTML rendering.
+- `deck.public.md` is the clean handoff artifact for display rendering. It should exclude speaker notes and internal control directives.
+- `render.handoff.json` is the first renderer entrypoint when present. Rendering skills should read it before choosing input files.
 - Use `<!-- sources: id-a, id-b -->` directly below each `##` heading in `outline.md` when a slide should lock to specific sources.
 - If the outline is still scaffold-only, the builder may overwrite it with an auto-generated outline.
 - Keep most decks between 6 and 10 slides unless the brief justifies more.
@@ -111,7 +115,7 @@ Source-format coverage should expand through skills and contract-preserving work
 - The repository does not render HTML directly.
 - HTML should be produced only by an explicit rendering skill.
 - `theme` in `brief.md` is only a freeform style hint string for rendering skills. It is not backed by an internal theme preset file.
-- Rendering skills should consume `deck.md`, `sources.lock.json`, the brief's style hint, and archived source context rather than raw inbox files.
+- Rendering skills should prefer `render.handoff.json` when present, then `deck.public.md`, plus `sources.lock.json`, the brief's style hint, and archived source context rather than raw inbox files.
 - Prefer strong typography, restrained motion, and clean evidence-first layouts.
 
 ## Recommended Skills
@@ -168,7 +172,7 @@ When an AI agent works in this repo, it should:
 1. Intake: place new or changed source files into `content/inbox/`.
 2. Normalize and archive: choose the appropriate preprocessing skill, parse the inbox files or remote source, archive originals into `content/sources/`, write normalized outputs into `content/normalized/`, and clear successful local inbox items.
 3. Compose: when asked for a report or HTML presentation, search the archived and normalized material, select relevant sources, and produce `brief.md`, `outline.md`, `sources.lock.json`, and a reviewable `deck.md`.
-4. Render: turn `deck.md` into final HTML only through an explicit rendering skill such as `frontend-design`.
+4. Render: turn `deck.public.md` into final HTML only through an explicit rendering skill such as `frontend-design`.
 
 Operational notes:
 

@@ -10,6 +10,7 @@ import {
   loadOrCreateOutline,
   parseDeckMarkdown,
   renderDeckMarkdown,
+  renderPublicDeckMarkdown,
   writeDeckArtifacts
 } from "@tiangong-ai-decks/pipeline";
 
@@ -37,7 +38,7 @@ program
 
 program
   .command("build")
-  .description("Build a reviewable deck.md from archived sources.")
+  .description("Build review and public deck Markdown artifacts from archived sources.")
   .argument("<deckId>", "Deck identifier")
   .option("--theme <theme>", "Override the render-hint style string from brief.md")
   .action(async (deckId: string, options: { theme?: string }) => {
@@ -50,7 +51,25 @@ program
     const outlineResult = await loadOrCreateOutline(deckId, brief, documents);
     const deck = buildDeckModel(deckId, brief, outlineResult.outline, documents);
     const deckMarkdown = renderDeckMarkdown(deck);
+    const publicDeckMarkdown = renderPublicDeckMarkdown(deck);
     const roundTrippedDeck = parseDeckMarkdown(deckMarkdown);
+    const renderHandoff = {
+      schemaVersion: 1,
+      deckId: roundTrippedDeck.id,
+      title: roundTrippedDeck.title,
+      displayArtifact: "deck.public.md",
+      reviewArtifact: "deck.md",
+      briefPath: "brief.md",
+      sourceLockPath: "sources.lock.json",
+      themeHint: brief.theme,
+      rules: {
+        publicOnly: true,
+        includeSpeakerNotes: false,
+        includeControlDirectives: false,
+        includeSourceIdsInOutput: false,
+        fallbackToReviewArtifact: "never-by-default" as const
+      }
+    };
     const sourceLock = roundTrippedDeck.sourceIds.map((sourceId) => {
       const document = documents.find((entry) => entry.id === sourceId);
       return {
@@ -70,6 +89,8 @@ program
     });
     const artifacts = await writeDeckArtifacts(deckId, {
       deckMarkdown,
+      publicDeckMarkdown,
+      renderHandoff,
       outline: outlineResult.outline,
       sourceLock
     });
@@ -77,8 +98,10 @@ program
     console.log(`Built deck ${roundTrippedDeck.id}`);
     console.log(`Outline ${outlineResult.generated ? "generated" : "loaded"} from ${outlineResult.outlinePath}`);
     console.log(`Deck Markdown: ${artifacts.deckMdPath}`);
+    console.log(`Public Deck Markdown: ${artifacts.deckPublicMdPath}`);
+    console.log(`Render Handoff: ${artifacts.renderHandoffPath}`);
     console.log(`Source Lock: ${artifacts.sourceLockPath}`);
-    console.log("HTML rendering is external to this repository. Use an explicit rendering skill against deck.md.");
+    console.log("HTML rendering is external to this repository. Renderers should read render.handoff.json and use deck.public.md by default.");
   });
 
 program

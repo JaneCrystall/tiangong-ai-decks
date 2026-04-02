@@ -3,7 +3,7 @@ import { join } from "node:path";
 
 import matter from "gray-matter";
 
-import type { DeckBrief, DeckOutlineSection, NormalizedDocument } from "@tiangong-ai-decks/domain";
+import type { DeckBrief, DeckOutlineSection, DeckRenderHandoff, NormalizedDocument } from "@tiangong-ai-decks/domain";
 
 import { getProjectPaths } from "./project.js";
 import { pickBulletPoints, slugify, stripMarkdown, summarize, writeJson } from "./utils.js";
@@ -322,6 +322,8 @@ export async function writeDeckArtifacts(
   deckId: string,
   payload: {
     deckMarkdown: string;
+    publicDeckMarkdown: string;
+    renderHandoff: DeckRenderHandoff;
     outline: DeckOutlineSection[];
     sourceLock: Array<{
       id: string;
@@ -339,16 +341,20 @@ export async function writeDeckArtifacts(
     }>;
   },
   startDir = process.cwd()
-): Promise<{ deckMdPath: string; sourceLockPath: string }> {
+): Promise<{ deckMdPath: string; deckPublicMdPath: string; renderHandoffPath: string; sourceLockPath: string }> {
   const paths = await getProjectPaths(startDir);
   const deckDir = join(paths.decks, slugify(deckId));
   await mkdir(deckDir, { recursive: true });
   await writeFile(join(deckDir, "deck.md"), payload.deckMarkdown, "utf8");
+  await writeFile(join(deckDir, "deck.public.md"), payload.publicDeckMarkdown, "utf8");
+  await writeJson(join(deckDir, "render.handoff.json"), payload.renderHandoff);
   await writeJson(join(deckDir, "sources.lock.json"), payload.sourceLock);
   await writeFile(join(deckDir, "outline.generated.md"), renderOutlineMarkdown(payload.outline), "utf8");
 
   return {
     deckMdPath: join(deckDir, "deck.md"),
+    deckPublicMdPath: join(deckDir, "deck.public.md"),
+    renderHandoffPath: join(deckDir, "render.handoff.json"),
     sourceLockPath: join(deckDir, "sources.lock.json")
   };
 }

@@ -7,7 +7,9 @@ The core repository is intentionally narrow:
 - Keep archive and normalized-content contracts stable.
 - Author each report through `decks/<deck-id>/brief.md` and `decks/<deck-id>/outline.md`.
 - Generate a reviewable `decks/<deck-id>/deck.md`.
-- Hand `deck.md` to an explicit rendering skill to produce HTML outside the core build pipeline.
+- Generate a clean `decks/<deck-id>/deck.public.md` for renderer handoff.
+- Generate `decks/<deck-id>/render.handoff.json` so external renderers know to use `deck.public.md` by default.
+- Hand `deck.public.md` to an explicit rendering skill to produce HTML outside the core build pipeline.
 
 Source-specific preprocessing and archival are intentionally externalized to skills or agent workflows. Common inputs on this machine include `markdown`, `pdf`, `xlsx`, `docx`, `pptx`, and public `github` repositories.
 
@@ -77,4 +79,6 @@ AGENTS.md                 Project contract for future AI work
 - `theme` in `brief.md` is only a freeform render hint for external skills. The repository does not ship a built-in HTML renderer or internal theme engine.
 - Public GitHub repositories can still be archived as sources when the agent or a skill writes them into the same archive and normalized contracts.
 - PDF-oriented preprocessing is text-first by default. It does not need to preserve page layout unless the task depends on layout.
-- `deck.md` is the review artifact and the handoff input for rendering skills.
+- `deck.md` is the review artifact.
+- `deck.public.md` is the clean renderer handoff artifact derived from `deck.md` without review-only notes or control directives.
+- `render.handoff.json` is the machine-readable renderer contract. External HTML renderers and skills should read it first and default to `deck.public.md`.
