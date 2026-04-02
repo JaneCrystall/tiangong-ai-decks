@@ -20,3 +20,6 @@ Notes:
 - `theme` in `brief.md` is only a style hint string for external skills. It is not backed by an internal theme preset file.
 - Inside `deck.md`, use `##` only for slide boundaries. Use `###` or deeper headings inside a slide body.
 - HTML output is not produced by the core repository build. Use an explicit rendering skill such as `frontend-design`.
+- Playwright verification is required before considering rendered HTML complete.
+- At minimum, validate one representative desktop viewport and one representative mobile viewport, and fix any clipping, fixed-UI overlap, or broken layout before handoff.
+- If the rendered deck keeps a sticky or floating side directory, also validate an ultra-wide viewport such as `3840x2160`.

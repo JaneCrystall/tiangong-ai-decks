@@ -117,6 +117,10 @@ Source-format coverage should expand through skills and contract-preserving work
 - `theme` in `brief.md` is only a freeform style hint string for rendering skills. It is not backed by an internal theme preset file.
 - Rendering skills should prefer `render.handoff.json` when present, then `deck.public.md`, plus `sources.lock.json`, the brief's style hint, and archived source context rather than raw inbox files.
 - Prefer strong typography, restrained motion, and clean evidence-first layouts.
+- Playwright verification is a hard requirement for rendered HTML, not optional polish.
+- Before considering rendered HTML done, open it in Playwright and review at least one representative desktop viewport and one representative mobile viewport unless the brief defines different targets.
+- If the rendered HTML uses persistent floating chrome such as a sticky table of contents, fixed rail, or floating side sheet, also review at least one ultra-wide viewport such as `3840x2160`.
+- Treat any fixed-header or fixed-nav occlusion, clipped slide content, unreadable overflow, or obvious Markdown-dump rendering as a blocking failure that must be fixed before handoff.
 
 ## Recommended Skills
 
@@ -134,6 +138,7 @@ Use the globally installed skills on this machine as the default capability map 
 
 - `frontend-design`: default skill for turning `deck.md` into polished HTML presentation pages.
 - `web-artifacts-builder`: use when the output needs a more elaborate multi-component web artifact rather than a straightforward presentation page.
+- `webapp-testing`: default verification skill for checking rendered HTML in Playwright before sign-off.
 - `imagegen`: supporting skill for deck-specific visual assets such as covers, illustrations, textures, and backgrounds.
 - `theme-factory`: use when the main need is to create or refine reusable presentation themes rather than changing deck content.
 - `brand-guidelines`: use when output must conform to a defined brand system or visual identity.
@@ -173,6 +178,7 @@ When an AI agent works in this repo, it should:
 2. Normalize and archive: choose the appropriate preprocessing skill, parse the inbox files or remote source, archive originals into `content/sources/`, write normalized outputs into `content/normalized/`, and clear successful local inbox items.
 3. Compose: when asked for a report or HTML presentation, search the archived and normalized material, select relevant sources, and produce `brief.md`, `outline.md`, `sources.lock.json`, and a reviewable `deck.md`.
 4. Render: turn `deck.public.md` into final HTML only through an explicit rendering skill such as `frontend-design`.
+5. Verify: open the rendered HTML in Playwright before completion and fix any layout clipping, fixed-UI overlap, overflow, or broken viewport behavior found in the target viewports.
 
 Operational notes:
 

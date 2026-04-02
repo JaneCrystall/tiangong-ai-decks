@@ -82,3 +82,10 @@ AGENTS.md                 Project contract for future AI work
 - `deck.md` is the review artifact.
 - `deck.public.md` is the clean renderer handoff artifact derived from `deck.md` without review-only notes or control directives.
 - `render.handoff.json` is the machine-readable renderer contract. External HTML renderers and skills should read it first and default to `deck.public.md`.
+
+## Renderer QA
+
+- Playwright verification is a hard requirement for rendered HTML output.
+- Before sign-off, open the rendered HTML in Playwright and review at least one representative desktop viewport and one representative mobile viewport unless the deck brief defines different targets.
+- If the page uses persistent floating UI such as a sticky table of contents or floating side panel, also verify an ultra-wide viewport such as `3840x2160`.
+- Treat fixed-header or fixed-nav overlap, clipped content, unreadable overflow, and obvious Markdown-dump output as blocking issues.
