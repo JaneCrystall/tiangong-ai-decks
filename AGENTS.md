@@ -49,8 +49,10 @@ Still out of scope for the core repository:
 ### Project Skills
 
 - Project-scoped skills installed through the `skills` CLI live under `.agents/skills/` for Codex-compatible usage in this repository.
+- `.claude/skills` may be a repository-tracked symlink to `.agents/skills` so Claude Code can consume the same project-local skill set.
 - `skills-lock.json` is the reproducible lock file for project-scoped skill installs and updates.
 - This repository may track project-scoped copied skills in Git when the team wants shared, deterministic behavior.
+- The default repository posture is to keep only `.agents/skills/.gitkeep` in Git and leave installed third-party skill contents ignored.
 - `.claude/settings.local.json` is local runtime configuration only. It is not a substitute for `.claude/skills/` or `.agents/skills/`.
 
 ### `content/`

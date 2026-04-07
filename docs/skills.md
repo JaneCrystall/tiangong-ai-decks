@@ -5,9 +5,11 @@ This project uses the `skills` CLI in project scope rather than global scope.
 ## Current Convention
 
 - Project-scoped skills are installed under `.agents/skills/`.
+- `.claude/skills` is a tracked symlink to `../.agents/skills` so Claude Code and Codex-compatible tooling can share the same project-local skills directory.
 - `skills-lock.json` is committed and records the source plus content hash for each installed skill.
 - The repository currently tracks the full `anthropics/skills` set for Codex-compatible project usage.
-- The checked-in installation is copied into the repository, not symlinked to an external location.
+- `.agents/skills/.gitkeep` keeps the directory present in a clean clone even when no skills have been installed yet.
+- Installed third-party skill contents under `.agents/skills/` are local artifacts and are ignored by Git.
 
 ## Install All Anthropic Skills For This Project
 
@@ -50,12 +52,14 @@ npm run skills:update
 ## Agent Path Notes
 
 - For this repository, Codex-compatible project skills live in `.agents/skills/`.
-- If you want Claude Code to load the same skill set, install separately to `.claude/skills/`:
+- Claude Code reads the same project-local skills through the `.claude/skills -> ../.agents/skills` symlink.
+- No second install is required just to make the same project skills visible to Claude Code.
 
 ```bash
-npx skills add https://github.com/anthropics/skills --skill '*' -a claude-code -y --copy
+ls -l .claude/skills
 ```
 
+- Because `.claude/skills` is symlinked, do not separately install another copied skill tree into `.claude/skills` unless you intentionally want it to diverge from `.agents/skills`.
 - `.claude/settings.local.json` is not a skill directory and does not install or restore skills by itself.
 
 ## Installed Skill Set

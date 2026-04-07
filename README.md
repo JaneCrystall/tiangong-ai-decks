@@ -41,7 +41,7 @@ npm run cli -- build project-overview
 
 ## Skills Setup
 
-This repository uses project-scoped agent skills. The checked-in skills live in `.agents/skills/`, and `skills-lock.json` records the installed source and content hashes so the setup can be restored consistently.
+This repository uses project-scoped agent skills. The canonical project skill directory is `.agents/skills/`, `skills-lock.json` records the installed source and content hashes, and `.claude/skills` is a symlink to `.agents/skills` so Claude Code can read the same project-local skill set.
 
 For this project, the default managed install is the full `anthropics/skills` set for Codex:
 
@@ -58,13 +58,15 @@ npm run skills:update
 npm run skills:check
 ```
 
-If you also want the same skills for Claude Code, install them separately so they land in `.claude/skills/` instead of the Codex-compatible `.agents/skills/` tree:
+Claude Code now reads the same project-local skills through the tracked `.claude/skills -> ../.agents/skills` symlink, so no second installation step is needed just to share the same skill set.
 
 ```bash
-npx skills add https://github.com/anthropics/skills --skill '*' -a claude-code -y --copy
+ls -l .claude/skills
 ```
 
 The local `.claude/settings.local.json` file is editor/runtime configuration only. It does not replace project-managed skill installation.
+
+The repository keeps `.agents/skills/.gitkeep` so clean clones still have a stable target directory even before any third-party skills are installed. Third-party skill contents under `.agents/skills/` are local installation artifacts and are not committed by default.
 
 ## Commands
 

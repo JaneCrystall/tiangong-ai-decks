@@ -27,3 +27,7 @@ decks/**
 !decks/README.md
 
 .agents/**
+!.agents/
+!.agents/skills/
+.agents/skills/**
+!.agents/skills/.gitkeep
