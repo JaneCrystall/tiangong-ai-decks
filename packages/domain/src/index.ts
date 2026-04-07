@@ -72,12 +72,35 @@ export interface DocumentSection {
   depth: number;
   content: string;
   order: number;
+  mediaRefs?: DocumentSectionMediaRef[];
 }
 
 export interface Citation {
   sourceId: string;
   label: string;
   locator?: string;
+}
+
+export interface DocumentSectionMediaRef {
+  path: string;
+  assetFile: string;
+  relId: string;
+  slideNumber: number;
+  left: number;
+  top: number;
+  width: number;
+  height: number;
+  area: number;
+  role?: "primary" | "supporting";
+}
+
+export interface NormalizedMediaLibrary {
+  rootPath: string;
+  indexPath: string;
+  assetCount: number;
+  referenceCount: number;
+  webRenderableReferenceCount: number;
+  relationshipTypeCounts?: Record<string, number>;
 }
 
 export interface NormalizedDocument {
@@ -90,6 +113,7 @@ export interface NormalizedDocument {
   importedSource: ImportedSource;
   sections: DocumentSection[];
   citations: Citation[];
+  media?: NormalizedMediaLibrary;
   extractedAt: string;
 }
 

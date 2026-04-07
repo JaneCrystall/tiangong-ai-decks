@@ -49,9 +49,9 @@ Source-format coverage should expand through skills and contract-preserving work
 ### `content/`
 
 - `content/inbox/`: temporary drop zone for new files before archival. This directory is intentionally not versioned except for the `.gitkeep` placeholder.
-- `content/sources/<kind>/<year>/<archive-key>/`: immutable imported snapshot plus `meta.json`.
+- `content/sources/<kind>/<year>/<archive-key>/`: immutable imported snapshot plus `meta.json`. Reproducible source-adjacent derivatives may live under dedicated subdirectories inside the same archive directory when the workflow requires them.
 - `content/normalized/<source-id>.json`: normalized document used by the builder.
-- `content/library/`: future derived artifacts such as facts, quotes, tables, code insights, and visuals.
+- `content/library/`: future derived artifacts such as facts, quotes, tables, code insights, and cross-source or generated visuals. Do not place PPTX-extracted slide media here.
 - `content/indexes/`: rebuildable search or retrieval indexes.
 - User data under `content/` should remain local by default. Keep only scaffolding files such as `.gitkeep` and documentation in Git.
 
@@ -92,11 +92,22 @@ Source-format coverage should expand through skills and contract-preserving work
 - `selectionHints.contentType` from the controlled set: `notes`, `report`, `research`, `spec`, `documentation`, `repository`, `reference`.
 - Preserve the imported original in `content/sources/`.
 - Never overwrite or mutate an imported source snapshot in place.
+- Derived companions must never replace or rewrite the imported original file. If a workflow needs extracted companions, add them as new files beside the source under the same archive directory.
 - Skills should write `kind` values that match the actual source type, such as `markdown`, `pdf`, `docx`, `pptx`, `xlsx`, or `github`.
 - Remote GitHub repositories are the normal exception to the local-inbox rule. They may be archived directly by URL and should still end up in the same archive structure.
 - PDF-oriented preprocessing should favor extracted text, OCR, and summaries over layout fidelity unless the task explicitly depends on page layout.
 - Spreadsheet-oriented preprocessing should preserve headers, sheet structure, and numeric meaning in normalized output.
 - Document and slide preprocessing should preserve semantic structure, headings, and key textual content in normalized output.
+- PPTX preprocessing must also extract embedded slide media into `content/sources/pptx/<year>/<archive-key>/media/`.
+- PPTX media extraction must write `content/sources/pptx/<year>/<archive-key>/media/index.json` with:
+- `rootPath` and `indexPath`.
+- `assetCount`, `referenceCount`, `webRenderableReferenceCount`, and `relationshipTypeCounts`.
+- one item per slide relationship with `slideNumber`, `relId`, `relationshipType`, `assetFile`, `path`, `sourcePath`, `webRenderable`, and `mimeType`.
+- `content/normalized/<source-id>.json` for PPTX sources must include a top-level `media` summary that points at the source-adjacent `media/` directory and `media/index.json`.
+- Each PPTX `sections[]` entry in `content/normalized/<source-id>.json` must include `mediaRefs` when matching slide images exist.
+- Each `mediaRefs` item must include `path`, `assetFile`, `relId`, `slideNumber`, `left`, `top`, `width`, `height`, `area`, and `role`.
+- `role` should distinguish `primary` from `supporting` images. Prefer large, content-bearing visuals as `primary`, and avoid flooding the section with tiny decorative icons.
+- When a PPTX section has at least one `primary` image, append a `对应图片路径：` block to the end of that section's `content` field using repository-relative paths.
 
 ### Deck Authoring
 
@@ -132,6 +143,7 @@ Use the globally installed skills on this machine as the default capability map 
 - `xlsx`: use when source material includes spreadsheet tables or numeric appendices that should be folded into normalized content.
 - `docx`: use when source material arrives as Word documents and should be archived into the same normalized-content contract.
 - `pptx`: use when source material arrives as existing slide decks that should be mined, archived, and normalized before reuse.
+- `pptx` workflows must preserve both text and slide media contracts. Text-only PPTX normalization is incomplete unless the media contract above is also satisfied.
 - If no dedicated preprocessing skill exists for a source type, the agent must still follow the same archive and normalized-data contracts.
 
 ### Output And Rendering
@@ -175,7 +187,7 @@ When an AI agent works in this repo, it should:
 ## Suggested Workflow
 
 1. Intake: place new or changed source files into `content/inbox/`.
-2. Normalize and archive: choose the appropriate preprocessing skill, parse the inbox files or remote source, archive originals into `content/sources/`, write normalized outputs into `content/normalized/`, and clear successful local inbox items.
+2. Normalize and archive: choose the appropriate preprocessing skill, parse the inbox files or remote source, archive originals into `content/sources/`, write normalized outputs into `content/normalized/`, extract required source-adjacent companions such as PPTX `media/` when applicable, and clear successful local inbox items.
 3. Compose: when asked for a report or HTML presentation, search the archived and normalized material, select relevant sources, and produce `brief.md`, `outline.md`, `sources.lock.json`, and a reviewable `deck.md`.
 4. Render: turn `deck.public.md` into final HTML only through an explicit rendering skill such as `frontend-design`.
 5. Verify: open the rendered HTML in Playwright before completion and fix any layout clipping, fixed-UI overlap, overflow, or broken viewport behavior found in the target viewports.
