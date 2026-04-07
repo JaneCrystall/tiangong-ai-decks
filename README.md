@@ -60,6 +60,7 @@ AGENTS.md                 Project contract for future AI work
 
 - Local files should enter through `content/inbox/`, then be archived and normalized by the appropriate preprocessing skill.
 - Archived sources live under `content/sources/<kind>/<year>/<archive-key>/`.
+- PPTX archives should also include extracted slide media under `content/sources/pptx/<year>/<archive-key>/media/` with a companion `index.json`.
 - `archive-key` is fixed as `<effective-date>--<kind>--<title-slug>--<import-stamp>`.
 - `meta.json` preserves the archive key parts, date/title provenance, checksum, and retrieval hints such as `summary`, `keywords`, `titleAliases`, and `contentType`.
 - Common `kind` values include `markdown`, `pdf`, `docx`, `pptx`, `xlsx`, and `github`, but the contract is open to additional skill-defined kinds.
@@ -70,6 +71,7 @@ AGENTS.md                 Project contract for future AI work
 - Use `xlsx` for spreadsheets and numeric appendices.
 - Use `docx` for Word documents.
 - Use `pptx` for existing slide decks you want to mine or archive.
+- PPTX workflows should extract source-adjacent slide media, populate normalized `media` and section-level `mediaRefs`, and append `对应图片路径：` blocks for sections with primary images.
 - For source types without a dedicated skill on this machine, the agent should still archive and normalize them into the same contract.
 
 ## Notes
