@@ -46,6 +46,13 @@ Still out of scope for the core repository:
 
 ## Repository Contract
 
+### Project Skills
+
+- Project-scoped skills installed through the `skills` CLI live under `.agents/skills/` for Codex-compatible usage in this repository.
+- `skills-lock.json` is the reproducible lock file for project-scoped skill installs and updates.
+- This repository may track project-scoped copied skills in Git when the team wants shared, deterministic behavior.
+- `.claude/settings.local.json` is local runtime configuration only. It is not a substitute for `.claude/skills/` or `.agents/skills/`.
+
 ### `content/`
 
 - `content/inbox/`: temporary drop zone for new files before archival. This directory is intentionally not versioned except for the `.gitkeep` placeholder.

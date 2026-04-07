@@ -14,6 +14,11 @@
     "cli": "tsx --no-cache apps/cli/src/index.ts",
     "dev": "tsx --no-cache apps/cli/src/index.ts",
     "lint": "eslint . --max-warnings=0",
+    "skills:check": "npx skills check",
+    "skills:install:anthropic": "npx skills add https://github.com/anthropics/skills --skill '*' -a codex -y --copy",
+    "skills:list": "npx skills list",
+    "skills:restore": "npx skills experimental_install",
+    "skills:update": "npx skills update",
     "verify": "npm run build"
   },
   "devDependencies": {

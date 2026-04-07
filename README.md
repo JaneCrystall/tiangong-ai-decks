@@ -18,6 +18,7 @@ Source-specific preprocessing and archival are intentionally externalized to ski
 
 ```bash
 npm install
+npm run skills:install:anthropic
 npm run cli -- new-deck project-overview --title "Tiangong AI Decks Overview"
 ```
 
@@ -38,12 +39,44 @@ npm run cli -- list-sources --verbose
 npm run cli -- build project-overview
 ```
 
+## Skills Setup
+
+This repository uses project-scoped agent skills. The checked-in skills live in `.agents/skills/`, and `skills-lock.json` records the installed source and content hashes so the setup can be restored consistently.
+
+For this project, the default managed install is the full `anthropics/skills` set for Codex:
+
+```bash
+npm run skills:install:anthropic
+```
+
+Useful maintenance commands:
+
+```bash
+npm run skills:list
+npm run skills:restore
+npm run skills:update
+npm run skills:check
+```
+
+If you also want the same skills for Claude Code, install them separately so they land in `.claude/skills/` instead of the Codex-compatible `.agents/skills/` tree:
+
+```bash
+npx skills add https://github.com/anthropics/skills --skill '*' -a claude-code -y --copy
+```
+
+The local `.claude/settings.local.json` file is editor/runtime configuration only. It does not replace project-managed skill installation.
+
 ## Commands
 
 ```bash
 npm run cli -- list-sources [--verbose]
 npm run cli -- new-deck <deck-id> [--title "..."] [--theme editorial-light]
 npm run cli -- build <deck-id> [--theme editorial-light]
+npm run skills:list
+npm run skills:install:anthropic
+npm run skills:restore
+npm run skills:update
+npm run skills:check
 ```
 
 ## Repository Shape
@@ -52,6 +85,8 @@ npm run cli -- build <deck-id> [--theme editorial-light]
 apps/cli/                 Command-line entry point
 packages/domain/          Shared JSON-first types for sources, documents, decks, and orchestration
 packages/pipeline/        Source listing, brief/outline handling, and deck assembly
+.agents/skills/           Project-scoped installed skills shared by Codex-compatible agents
+skills-lock.json          Reproducible lock file for project-scoped skills
 content/                  Long-lived source and normalized content library
 decks/                    One workspace per report deck
 AGENTS.md                 Project contract for future AI work
